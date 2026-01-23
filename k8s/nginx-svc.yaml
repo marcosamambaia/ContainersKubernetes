@@ -1,0 +1,13 @@
+apiVersion: v1                # Versao do API usado p/ Services
+kind: Service                 # Tipo de recurso -> Service
+metadata:
+  name: nginx-svc             # Nome do Service
+  namespace: websolutions     # Namespace onde será criado
+spec:
+  type: NodePort              # Tipo NodePort expõe a aplicação para fora do cluster
+  selector:
+    app: nginx-poc            # Seleciona os pods com essa label
+  ports:
+    - port: 80                # Porta interna do Service
+      targetPort: 80          # Porta dentro do container
+      nodePort: 30080          # Porta exposta no Node (externa) → acessível via http://IP:8080

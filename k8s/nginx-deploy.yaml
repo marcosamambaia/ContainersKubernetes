@@ -1,0 +1,20 @@
+apiVersion: apps/v1                # Versão da API para Deployments
+kind: Deployment                   # Tipo de recurso: Deployment
+metadata:
+  name: nginx-deploy               # Nome do deployment
+  namespace: websolutions           # Namespace onde será criado
+spec:
+  replicas: 2                      # Número de réplicas (2 pods de Nginx)
+  selector:
+    matchLabels:
+      app: nginx-poc                # Label usada para selecionar os pods
+  template:
+    metadata:
+      labels:
+        app: nginx-poc              # Label aplicada nos pods
+    spec:
+      containers:
+        - name: nginx               # Nome do container
+          image: nginx-poc:1.0      # Usa a imagem personalizada que você buildou
+          ports:
+            - containerPort: 80     # Porta exposta dentro do container

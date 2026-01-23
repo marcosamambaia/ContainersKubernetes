@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mariadb-deploy
+  namespace: websolutions
+spec:
+  replicas: 1                 # Apenas 1 réplica (banco não é stateless)
+  selector:
+    matchLabels:
+      app: mariadb
+  template:
+    metadata:
+      labels:
+        app: mariadb
+    spec:
+      containers:
+        - name: mariadb
+          image: mariadb:11.4
+          ports:
+            - containerPort: 3306
+          envFrom:
+            - secretRef:
+                name: mariadb-secret   # Pegamos variáveis do Secret
+          volumeMounts:
+            - name: data
+              mountPath: /var/lib/mysql   # Onde os dados ficam armazenados
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: mariadb-pvc

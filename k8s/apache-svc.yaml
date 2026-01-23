@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: apache-svc
+  namespace: websolutions
+spec:
+  type: NodePort
+  selector:
+    app: apache-poc
+  ports:
+    - port: 80
+      targetPort: 80
+      nodePort: 30081          # Apache exposto na porta 8081 → http://IP:8081

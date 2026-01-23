@@ -1,0 +1,12 @@
+# PVC garante persistência dos dados do banco
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: mariadb-pvc
+  namespace: websolutions
+spec:
+  accessModes:
+    - ReadWriteOnce           # Apenas um pod pode montar em modo leitura/escrita
+  resources:
+    requests:
+      storage: 5Gi            # Tamanho do volume solicitado

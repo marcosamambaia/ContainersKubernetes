@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: apache-deploy
+  namespace: websolutions
+spec:
+  replicas: 2                 # Também rodamos 2 réplicas para alta disponibilidade
+  selector:
+    matchLabels:
+      app: apache-poc
+  template:
+    metadata:
+      labels:
+        app: apache-poc
+    spec:
+      containers:
+        - name: apache
+          image: apache-poc:1.0
+          ports:
+            - containerPort: 80

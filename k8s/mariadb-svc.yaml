@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: mariadb-svc
+  namespace: websolutions
+spec:
+  type: ClusterIP             # Banco exposto apenas dentro do cluster
+  selector:
+    app: mariadb
+  ports:
+    - port: 3306              # Porta padrão do MySQL/MariaDB
+      targetPort: 3306

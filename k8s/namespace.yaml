@@ -1,0 +1,4 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: websolutions   # Nome do namespace onde todos os recursos serão criados

@@ -1,0 +1,11 @@
+# Usa a imagem oficial do Apache como base
+FROM httpd:latest
+
+# Remove os arquivos padrão do Apache
+RUN rm -rf /usr/local/apache2/htdocs/*
+
+# Copia os HTMLs personalizados da pasta local para dentro do container
+COPY html/ /usr/local/apache2/htdocs/
+
+# Expõe a porta padrão do Apache
+EXPOSE 80

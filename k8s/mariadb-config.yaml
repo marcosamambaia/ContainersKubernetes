@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mariadb-config
+  namespace: websolutions
+data:
+# Arquivo de configuração do MariaDB
+# Número máximo de conexões simultâneas
+# Memória para cache de dados
+# Ativar log de queries lentas
+# Queries acima de 2 segundos serão logadas
+# Charset padrão
+# Collation padrão
+  my.cnf: |                              
+    [mysqld]
+    max_connections=200                  
+    innodb_buffer_pool_size=128M         
+    slow_query_log=1                     
+    long_query_time=2                    
+    character-set-server=utf8mb4         
+    collation-server=utf8mb4_unicode_ci  
