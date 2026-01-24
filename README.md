@@ -36,19 +36,35 @@ websolutions/
 - MariaDB
 - Git e GitHub
 
-## Como executar
+## Fluxo de execução
 
-1. Build das imagens:
+1. Build das imagens personalizadas:
    docker build -t nginx-poc:1.0 -f docker/nginx/Dockerfile docker/nginx
    docker build -t apache-poc:1.0 -f docker/apache/Dockerfile docker/apache
 
-2. Carregar no Minikube:
+2. Carregar as imagens no Minikube:
    minikube image load nginx-poc:1.0
    minikube image load apache-poc:1.0
 
-3. Aplicar os manifests:
+3. Aplicar os manifests Kubernetes:
    minikube kubectl -- apply -f k8s/
 
-4. Acessar os serviços:
-   Nginx: http://192.168.49.2:30080
-   Apache: http://192.168.49.2:30081
+4. Verificar os pods:
+   minikube kubectl -- get pods -n websolutions
+
+5. Verificar o IP do Minikube:
+   minikube ip
+
+6. Acessar os serviços:
+   Nginx: http://<IP_MINIKUBE>:30080
+   Apache: http://<IP_MINIKUBE>:30081
+
+## Observações sobre desligar a máquina
+
+- Ao desligar o computador, o Minikube é parado e os pods deixam de rodar.
+- As imagens Docker e os manifests permanecem salvos localmente.
+- Os dados do MariaDB são mantidos graças ao PVC (PersistentVolumeClaim).
+- Ao ligar novamente, basta executar:
+  minikube start
+  minikube kubectl -- apply -f k8s/
+  minikube kubectl -- get pods -n websolutions
