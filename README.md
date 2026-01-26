@@ -87,3 +87,179 @@ Para testar a conexão com o banco de dados dentro do cluster:
 - Minikube >= 1.33
 - Docker >= 24
 - Kubernetes >= 1.30
+
+==============================================================================================================================
+==============================================================================================================================
+
+## Entendendo o Fluxo da Aplicação
+
+Para compreender como tudo funciona, vamos seguir o caminho desde a criação da imagem até o acesso pelo navegador:
+
+1. **Dockerfile**
+   - É o roteiro que ensina o Docker a montar uma imagem.
+   - Nele definimos:
+     - Qual imagem base usar (ex.: `httpd:latest` ou `nginx:latest`).
+     - Quais arquivos copiar (HTML personalizado).
+     - Qual porta o container deve expor.
+   - Resultado: uma **imagem Docker** pronta para rodar.
+
+2. **Imagem Docker**
+   - É como uma "receita congelada": contém o servidor web + seus arquivos.
+   - Exemplo: `apache-poc:1.0` e `nginx-poc:1.0`.
+   - A imagem é estática, não roda sozinha. Precisa ser instanciada.
+
+3. **Deployment (Kubernetes)**
+   - Define como os pods devem ser criados e gerenciados.
+   - Especifica:
+     - Qual imagem usar.
+     - Quantas réplicas (pods) rodar.
+     - Labels para identificar os pods.
+   - Garante que os pods estejam sempre rodando e escaláveis.
+
+4. **Pod**
+   - É a instância em execução da imagem dentro do cluster.
+   - Cada pod roda um container baseado na imagem (Apache ou Nginx).
+   - Se um pod cair, o Deployment recria automaticamente.
+
+5. **Service**
+   - Cria um endereço fixo para acessar os pods.
+   - Usa **NodePort** para expor para fora do cluster.
+   - Exemplo:
+     - Apache → `http://<minikube-ip>:30081`
+     - Nginx → `http://<minikube-ip>:30080`
+
+6. **Usuário no navegador**
+   - Digita a URL.
+   - O tráfego passa pelo Service → chega ao Pod → o Pod serve o HTML.
+   - Resultado: o usuário vê a página personalizada.
+
+---
+
+### Fluxo resumido
+
+----------------------------------------------------------------------------------------------------------------------------
+FLUXO RESUMIDO:
+
+[ Dockerfile ] → [ Imagem Docker ] → [ Deployment ] → [ Pod ] → [ Service ] → [ Usuário ]
+----------------------------------------------------------------------------------------------------------------------------
+
+
+---
+
+### Por que separar Apache e Nginx em Deployments e Services diferentes?
+
+- **Modularidade**: cada aplicação tem sua própria configuração.
+- **Escalabilidade independente**: é possível aumentar réplicas de um sem afetar o outro.
+- **Manutenção facilitada**: se o Apache precisar de atualização, não interfere no Nginx.
+- **Boas práticas do Kubernetes**: cada serviço deve ter seu próprio Deployment e Service.
+
+
+
+==============================================================================================================================
+==============================================================================================================================
+
+
+## Entendendo o Cluster Kubernetes
+
+Um cluster Kubernetes é o conjunto de máquinas que trabalham juntas para rodar e orquestrar containers. 
+Ele garante que aplicações como Apache, Nginx e MariaDB rodem de forma organizada, escalável e acessível.
+
+O cluster é formado por duas partes principais:
+
+1. PLANO DE CONTROLE (Control Plane)
+   - É o "cérebro" do cluster.
+   - Responsável por decidir o que deve rodar, onde e como.
+   - Componentes principais:
+     - API Server → ponto de entrada para comandos (kubectl).
+     - Scheduler → decide em qual nó cada pod vai rodar.
+     - Controller Manager → garante que o estado desejado seja mantido.
+     - etcd → banco de dados interno que guarda todo o estado do cluster.
+
+2. NÓS (Nodes)
+   - São as "máquinas operárias" que realmente rodam os containers.
+   - Cada nó possui:
+     - Kubelet → agente que conversa com o Control Plane.
+     - Container Runtime → ex.: Docker ou containerd, que roda os containers.
+     - Kube-proxy → cuida da rede e do roteamento de tráfego para os pods.
+
+----------------------------------------------------
+COMO FUNCIONA NO PROJETO WEBSOLUTIONS
+
+- Usamos o Minikube, que cria um cluster local na máquina.
+- Aplicamos os YAMLs → o Control Plane interpreta e entende o que precisa ser criado.
+- O Scheduler decide em qual nó os pods vão rodar (no Minikube, há apenas um nó).
+- O Kubelet cria os pods usando suas imagens Docker (apache-poc:1.0 e nginx-poc:1.0).
+- O Service expõe esses pods para fora do cluster, permitindo acesso via navegador.
+
+----------------------------------------------------
+FLUXO RESUMIDO
+
+[ Usuário aplica YAML ]
+        ↓
+[ Control Plane interpreta ]
+        ↓
+[ Scheduler decide onde rodar ]
+        ↓
+[ Node cria Pods com containers ]
+        ↓
+[ Service expõe Pods para acesso externo ]
+        ↓
+[ Usuário acessa via navegador ]
+
+----------------------------------------------------
+POR QUE PRECISAMOS DO CLUSTER?
+
+- Escalabilidade → aumentar réplicas de Apache ou Nginx facilmente.
+- Resiliência → se um pod cair, o cluster recria automaticamente.
+- Isolamento → cada aplicação roda em seu próprio pod, sem conflito.
+- Orquestração → o cluster garante que tudo esteja rodando conforme o desejado.
+
+
+==============================================================================================================================
+==============================================================================================================================
+
+
+
+## Cenário do Cliente
+
+Imagine que o cliente chega até a Websolutions com a seguinte necessidade:
+- Ele tem um site institucional (HTML simples) → hospedado no Nginx.
+- Ele tem uma aplicação dinâmica (PHP ou outro backend) que precisa de banco → hospedada no Apache + MariaDB.
+
+----------------------------------------------------
+COMO O CLIENTE USARIA NA PRÁTICA
+
+1. Entrega dos arquivos
+   - O cliente envia seus arquivos HTML/PHP para a Websolutions.
+   - Esses arquivos são colocados dentro das pastas:
+     - docker/nginx/html
+     - docker/apache/html
+
+2. Empacotamento em imagem Docker
+   - A Websolutions gera uma imagem personalizada (nginx-poc:1.0 ou apache-poc:1.0) com os arquivos do cliente já embutidos.
+   - Isso garante que o site do cliente está pronto para rodar em qualquer ambiente.
+
+3. Deploy no Kubernetes
+   - A imagem é carregada no cluster Minikube (ou em produção, num cluster Kubernetes real).
+   - O Deployment cria os pods e o Service expõe a aplicação.
+
+4. Acesso ao site
+   - O cliente recebe uma URL/IP para acessar sua aplicação:
+     - http://192.168.49.2:30080 → site no Nginx
+     - http://192.168.49.2:30081 → aplicação no Apache
+   - Em produção, isso seria um domínio próprio (ex.: www.clienteA.com), apontando para o LoadBalancer do cluster.
+
+5. Banco de dados (MariaDB)
+   - Se a aplicação precisar de persistência, o cliente usa o MariaDB já configurado no cluster.
+   - A Websolutions fornece credenciais seguras via Secret e configurações via ConfigMap.
+
+----------------------------------------------------
+EXPERIÊNCIA DO CLIENTE
+
+Do ponto de vista do cliente, ele não precisa se preocupar com Docker ou Kubernetes. Ele apenas:
+- Entrega os arquivos da aplicação.
+- Recebe um endereço (URL/IP) para acessar.
+- Se precisar, recebe credenciais para o banco.
+
+Toda a parte de infraestrutura, escalabilidade e disponibilidade é responsabilidade da Websolutions.
+
