@@ -4,7 +4,7 @@ metadata:
   name: mariadb-deploy
   namespace: websolutions
 spec:
-  replicas: 1                 # Apenas 1 réplica (banco não é stateless)
+  replicas: 1
   selector:
     matchLabels:
       app: mariadb
@@ -14,17 +14,40 @@ spec:
         app: mariadb
     spec:
       containers:
-        - name: mariadb
-          image: mariadb:11.4
-          ports:
-            - containerPort: 3306
-          envFrom:
-            - secretRef:
-                name: mariadb-secret   # Pegamos variáveis do Secret
-          volumeMounts:
-            - name: data
-              mountPath: /var/lib/mysql   # Onde os dados ficam armazenados
-      volumes:
+      - name: mariadb
+        image: mariadb:11.4
+        ports:
+        - containerPort: 3306
+        envFrom:
+        - secretRef:
+            name: mariadb-secret
+        volumeMounts:
         - name: data
-          persistentVolumeClaim:
-            claimName: mariadb-pvc
+          mountPath: /var/lib/mysql
+        - name: mariadb-config-volume
+          mountPath: /etc/mysql/conf.d/my.cnf
+          subPath: my.cnf
+        livenessProbe:
+          exec:
+            command: ["mysqladmin", "ping", "-h", "localhost"]
+          initialDelaySeconds: 30
+          periodSeconds: 10
+        readinessProbe:
+          exec:
+            command: ["mysqladmin", "ping", "-h", "localhost"]
+          initialDelaySeconds: 5
+          periodSeconds: 10
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "250m"
+          limits:
+            memory: "512Mi"
+            cpu: "500m"
+      volumes:
+      - name: data
+        persistentVolumeClaim:
+          claimName: mariadb-pvc
+      - name: mariadb-config-volume
+        configMap:
+          name: mariadb-config

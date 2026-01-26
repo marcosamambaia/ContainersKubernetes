@@ -1,4 +1,6 @@
 # PVC garante persistência dos dados do banco
+          
+
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
@@ -10,3 +12,4 @@ spec:
   resources:
     requests:
       storage: 5Gi            # Tamanho do volume solicitado
+  storageClassName: standard
