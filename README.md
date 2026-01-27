@@ -53,8 +53,8 @@ websolutions/
 ```
 3. Carregar as imagens no Minikube:
 ```bash
-   minikube image load nginx-poc:1.0
-   minikube image load apache-poc:1.0
+   minikube image load nginx-poc:latest
+   minikube image load apache-poc:latest 
 ```
 4. Aplicar os manifests Kubernetes:
 ```bash
