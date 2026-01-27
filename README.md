@@ -39,29 +39,36 @@ websolutions/
 
 ## Fluxo de execução
 
-1. Build das imagens personalizadas:
+
+
+1. Iniciar o Cluster
+```bash
+   minikube start --driver=docker --kubernetes-version=v1.30.0 \
+    --extra-config=apiserver.service-node-port-range=1-65535
+```
+2. Build das imagens personalizadas:
 ```bash
    docker build -t nginx-poc:1.0 -f docker/nginx/Dockerfile docker/nginx
    docker build -t apache-poc:1.0 -f docker/apache/Dockerfile docker/apache
 ```
-2. Carregar as imagens no Minikube:
+3. Carregar as imagens no Minikube:
 ```bash
    minikube image load nginx-poc:1.0
    minikube image load apache-poc:1.0
 ```
-3. Aplicar os manifests Kubernetes:
+4. Aplicar os manifests Kubernetes:
 ```bash
    minikube kubectl -- apply -f k8s/
 ```
-4. Verificar os pods:
+5. Verificar os pods:
 ```bash
    minikube kubectl -- get pods -n websolutions
 ```
-5. Verificar o IP do Minikube:
+6. Verificar o IP do Minikube:
 ```bash
    minikube ip
 ```
-6. Acessar os serviços:
+7. Acessar os serviços:
 ```bash
    Nginx: http://<IP_MINIKUBE>:30080
    Apache: http://<IP_MINIKUBE>:30081
