@@ -4,7 +4,7 @@ Este projeto é uma prova de conceito (POC) para orquestração de containers co
 utilizando os servidores Nginx e Apache, além de MariaDB como banco de dados.
 
 ## Estrutura do projeto
-
+```bash
 websolutions/
 ├── README.md
 ├── docker/
@@ -27,7 +27,7 @@ websolutions/
 │   ├── namespace.yaml
 │   ├── nginx-deploy.yaml
 │   └── nginx-svc.yaml
-
+```
 ## Tecnologias utilizadas
 
 - Docker
@@ -40,26 +40,32 @@ websolutions/
 ## Fluxo de execução
 
 1. Build das imagens personalizadas:
+```bash
    docker build -t nginx-poc:1.0 -f docker/nginx/Dockerfile docker/nginx
    docker build -t apache-poc:1.0 -f docker/apache/Dockerfile docker/apache
-
+```
 2. Carregar as imagens no Minikube:
+```bash
    minikube image load nginx-poc:1.0
    minikube image load apache-poc:1.0
-
+```
 3. Aplicar os manifests Kubernetes:
+```bash
    minikube kubectl -- apply -f k8s/
-
+```
 4. Verificar os pods:
+```bash
    minikube kubectl -- get pods -n websolutions
-
+```
 5. Verificar o IP do Minikube:
+```bash
    minikube ip
-
+```
 6. Acessar os serviços:
+```bash
    Nginx: http://<IP_MINIKUBE>:30080
    Apache: http://<IP_MINIKUBE>:30081
-
+```
 ## Acessando o MariaDB
 
 Para testar a conexão com o banco de dados dentro do cluster:
@@ -78,13 +84,13 @@ minikube start --driver=docker --kubernetes-version=v1.30.0 \
   --extra-config=apiserver.service-node-port-range=1-65535
 minikube kubectl -- apply -f k8s/namespace.yaml
 minikube kubectl -- get pods -n websolutions
-
+```
 ## Troubleshooting
-
+```bash
 - ErrImagePull → usar minikube image load para carregar imagens locais.
 - ContainerCreating → verificar PVC ou ConfigMap.
 - CrashLoopBackOff → checar probes e variáveis de ambiente.
-
+```
 ##  Compatibilidade
 
 | Ferramenta   | Versão testada | Observações |
