@@ -74,8 +74,9 @@ Para testar a conexão com o banco de dados dentro do cluster:
 - Ao ligar novamente, basta executar:
 
 ```bash
-minikube start --driver=docker --kubernetes-version=v1.30.0
-minikube kubectl -- apply -f k8s/
+minikube start --driver=docker --kubernetes-version=v1.30.0 \
+  --extra-config=apiserver.service-node-port-range=1-65535
+minikube kubectl -- apply -f k8s/namespace.yaml
 minikube kubectl -- get pods -n websolutions
 
 ## Troubleshooting

@@ -1,5 +1,5 @@
 # PVC garante persistência dos dados do banco
-          
+        
 
 apiVersion: v1
 kind: PersistentVolumeClaim

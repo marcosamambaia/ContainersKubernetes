@@ -1,13 +1,13 @@
-apiVersion: v1                # Versao do API usado p/ Services
+apiVersion: v1                # Versão da API do Kubernetes usada para criar o recurso
 kind: Service                 # Tipo de recurso -> Service
 metadata:
-  name: nginx-svc             # Nome do Service
-  namespace: websolutions     # Namespace onde será criado
+  name: nginx-svc              # Nome do Service
+  namespace: websolutions      # Namespace onde será criado
 spec:
-  type: NodePort              # Tipo NodePort expõe a aplicação para fora do cluster
+  type: NodePort               # Tipo NodePort expõe a aplicação para fora do cluster
   selector:
-    app: nginx-poc            # Seleciona os pods com essa label
+    app: nginx-poc             # Seleciona os pods que têm a label "app=nginx-poc"
   ports:
-    - port: 80                # Porta interna do Service
-      targetPort: 80          # Porta dentro do container
-      nodePort: 30080          # Porta exposta no Node (externa) → acessível via http://IP:8080
+    - port: 80                 # Porta interna do Service (porta lógica dentro do cluster)
+      targetPort: 80           # Porta dentro do container/pod (onde o Nginx está rodando)
+      nodePort: 8080           # Porta fixa no Node (externa) → acessível via http://<minikube-ip>:8080

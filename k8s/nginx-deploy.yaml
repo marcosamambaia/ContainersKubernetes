@@ -1,7 +1,7 @@
 apiVersion: apps/v1                # Versão da API para Deployments
 kind: Deployment                   # Tipo de recurso: Deployment
 metadata:
-  name: nginx-deploy               # Nome do deployment
+  name: nginx-deploy               # Nome do Deployment
   namespace: websolutions           # Namespace onde será criado
 spec:
   replicas: 2                      # Número de réplicas (2 pods de Nginx)
@@ -15,6 +15,6 @@ spec:
     spec:
       containers:
         - name: nginx               # Nome do container
-          image: nginx-poc:1.0      # Usa a imagem personalizada que você buildou
+          image: nginx-poc:latest   #  Corrigido: usa a imagem que você buildou e carregou no Minikube
           ports:
-            - containerPort: 80     # Porta exposta dentro do container
+            - containerPort: 80     # Porta exposta dentro do container (Nginx escuta na 80)

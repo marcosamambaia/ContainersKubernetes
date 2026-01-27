@@ -1,13 +1,13 @@
-apiVersion: v1
-kind: Service
+apiVersion: v1                # Versão da API do Kubernetes usada para criar o recurso
+kind: Service                 # Tipo de recurso -> Service (exposição de pods)
 metadata:
-  name: apache-svc
-  namespace: websolutions
+  name: apache-svc             # Nome do Service (único dentro do namespace)
+  namespace: websolutions      # Namespace onde o Service será criado
 spec:
-  type: NodePort
+  type: NodePort               # Tipo NodePort expõe a aplicação para fora do cluster
   selector:
-    app: apache-poc
+    app: apache-poc            # Seleciona os pods que têm a label "app=apache-poc"
   ports:
-    - port: 80
-      targetPort: 80
-      nodePort: 30081          # Apache exposto na porta 8081 → http://IP:8081
+    - port: 80                 # Porta interna do Service (porta lógica dentro do cluster)
+      targetPort: 80           # Porta dentro do container/pod (onde o Apache está rodando)
+      nodePort: 8081           # Porta fixa no Node (externa) → acessível via http://<minikube-ip>:8081
