@@ -66,15 +66,17 @@ Para testar a conexão com o banco de dados dentro do cluster:
    minikube kubectl -- run -it --rm mariadb-client --image=mariadb:11.4 -n websolutions -- \
      mysql -h mariadb-svc -uwebuser -pwebpass webdb
 
-## Observações sobre desligar a máquina
+### ⚡ Observações sobre desligar a máquina
 
-- Ao desligar o computador, o Minikube é parado e os pods deixam de rodar.
-- As imagens Docker e os manifests permanecem salvos localmente.
-- Os dados do MariaDB são mantidos graças ao PVC (PersistentVolumeClaim).
+- Ao desligar o computador, o **Minikube** é parado e os pods deixam de rodar.
+- As **imagens Docker** e os **manifests** permanecem salvos localmente.
+- Os dados do **MariaDB** são mantidos graças ao **PVC (PersistentVolumeClaim)**.
 - Ao ligar novamente, basta executar:
-   minikube start
-   minikube kubectl -- apply -f k8s/
-   minikube kubectl -- get pods -n websolutions
+
+```bash
+minikube start --driver=docker --kubernetes-version=v1.30.0
+minikube kubectl -- apply -f k8s/
+minikube kubectl -- get pods -n websolutions
 
 ## Troubleshooting
 
@@ -82,11 +84,22 @@ Para testar a conexão com o banco de dados dentro do cluster:
 - ContainerCreating → verificar PVC ou ConfigMap.
 - CrashLoopBackOff → checar probes e variáveis de ambiente.
 
-## Compatibilidade
+##  Compatibilidade
 
-- Minikube >= 1.33
-- Docker >= 24
-- Kubernetes >= 1.30
+| Ferramenta   | Versão testada | Observações |
+|--------------|----------------|-------------|
+| **Docker**   | 26.x (ex: 26.1.3) | Compatível com Minikube v1.37.0. Versões 28/29 causam erro de comunicação. |
+| **Minikube** | v1.37.0         | Funciona bem com Docker 25.x e 26.x. Para Docker 29.x é necessário Minikube >= v1.38. |
+| **Kubernetes** | v1.30.0       | Estável e suportado. Versão v1.34.0 apresentou falhas de inicialização. |
+| **Sistema**  | Debian 13 (Trixie) | Repositório oficial do Docker só fornece 28/29. Usar repositório Bookworm para instalar 25/26. |
+
+###  Notas importantes
+- Se usar **Docker 29.x**, atualize o Minikube para v1.38 ou superior.  
+- Se permanecer no **Minikube v1.37.0**, mantenha Docker na versão 25.x ou 26.x.  
+- Sempre especifique a versão do Kubernetes ao iniciar o cluster:
+  ```bash
+  minikube start --driver=docker --kubernetes-version=v1.30.0
+
 
 ==============================================================================================================================
 ==============================================================================================================================
