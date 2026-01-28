@@ -111,9 +111,9 @@ minikube kubectl -- get pods -n websolutions
 - Se usar **Docker 29.x**, atualize o Minikube para v1.38 ou superior.  
 - Se permanecer no **Minikube v1.37.0**, mantenha Docker na versão 25.x ou 26.x.  
 - Sempre especifique a versão do Kubernetes ao iniciar o cluster:
-  ```bash
+```bash
   minikube start --driver=docker --kubernetes-version=v1.30.0
-
+```
 
 ==============================================================================================================================
 ==============================================================================================================================
@@ -152,9 +152,10 @@ Para compreender como tudo funciona, vamos seguir o caminho desde a criação da
    - Cria um endereço fixo para acessar os pods.
    - Usa **NodePort** para expor para fora do cluster.
    - Exemplo:
+   ```bash
      - Apache → `http://<minikube-ip>:30081`
      - Nginx → `http://<minikube-ip>:30080`
-
+   ```
 6. **Usuário no navegador**
    - Digita a URL.
    - O tráfego passa pelo Service → chega ao Pod → o Pod serve o HTML.
@@ -220,7 +221,7 @@ COMO FUNCIONA NO PROJETO WEBSOLUTIONS
 
 ----------------------------------------------------
 FLUXO RESUMIDO
-
+```bash
 [ Usuário aplica YAML ]
         ↓
 [ Control Plane interpreta ]
@@ -232,7 +233,7 @@ FLUXO RESUMIDO
 [ Service expõe Pods para acesso externo ]
         ↓
 [ Usuário acessa via navegador ]
-
+```
 ----------------------------------------------------
 POR QUE PRECISAMOS DO CLUSTER?
 
@@ -272,10 +273,11 @@ COMO O CLIENTE USARIA NA PRÁTICA
 
 4. Acesso ao site
    - O cliente recebe uma URL/IP para acessar sua aplicação:
+   ```bash
      - http://192.168.49.2:30080 → site no Nginx
      - http://192.168.49.2:30081 → aplicação no Apache
    - Em produção, isso seria um domínio próprio (ex.: www.clienteA.com), apontando para o LoadBalancer do cluster.
-
+   ```
 5. Banco de dados (MariaDB)
    - Se a aplicação precisar de persistência, o cliente usa o MariaDB já configurado no cluster.
    - A Websolutions fornece credenciais seguras via Secret e configurações via ConfigMap.
