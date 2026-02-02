@@ -168,13 +168,13 @@ Para compreender como tudo funciona, vamos seguir o caminho desde a criação da
 ---
 
 ### Fluxo resumido
-
+```bash
 ----------------------------------------------------------------------------------------------------------------------------
 FLUXO RESUMIDO:
 
 [ Dockerfile ] → [ Imagem Docker ] → [ Deployment ] → [ Pod ] → [ Service ] → [ Usuário ]
 ----------------------------------------------------------------------------------------------------------------------------
-
+``
 
 ---
 
