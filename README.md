@@ -70,8 +70,8 @@ websolutions/
 ```
 7. Acessar os serviços:
 ```bash
-   Nginx: http://<IP_MINIKUBE>:30080
-   Apache: http://<IP_MINIKUBE>:30081
+   Nginx: http://<IP_MINIKUBE>:8080
+   Apache: http://<IP_MINIKUBE>:8081
 ```
 ## Acessando o MariaDB
 
@@ -157,8 +157,8 @@ Para compreender como tudo funciona, vamos seguir o caminho desde a criação da
    - Usa **NodePort** para expor para fora do cluster.
    - Exemplo:
    ```bash
-     - Apache → `http://<minikube-ip>:30081`
-     - Nginx → `http://<minikube-ip>:30080`
+     - Apache → `http://<minikube-ip>:8081`
+     - Nginx → `http://<minikube-ip>:8080`
    ```
 6. **Usuário no navegador**
    - Digita a URL.
@@ -278,8 +278,8 @@ COMO O CLIENTE USARIA NA PRÁTICA
 4. Acesso ao site
    - O cliente recebe uma URL/IP para acessar sua aplicação:
    ```bash
-     - http://192.168.49.2:30080 → site no Nginx
-     - http://192.168.49.2:30081 → aplicação no Apache
+     - http://192.168.49.2:8080 → site no Nginx
+     - http://192.168.49.2:8081 → aplicação no Apache
    - Em produção, isso seria um domínio próprio (ex.: www.clienteA.com), apontando para o LoadBalancer do cluster.
    ```
 5. Banco de dados (MariaDB)
