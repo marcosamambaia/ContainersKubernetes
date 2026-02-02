@@ -136,7 +136,7 @@ Para compreender como tudo funciona, vamos seguir o caminho desde a criação da
 
 2. **Imagem Docker**
    - É como uma "receita congelada": contém o servidor web + seus arquivos.
-   - Exemplo: `apache-poc:1.0` e `nginx-poc:1.0`.
+   - Exemplo: `apache-poc:latest` e `nginx-poc:latest`.
    - A imagem é estática, não roda sozinha. Precisa ser instanciada.
 
 3. **Deployment (Kubernetes)**
@@ -221,7 +221,7 @@ COMO FUNCIONA NO PROJETO WEBSOLUTIONS
 - Usamos o Minikube, que cria um cluster local na máquina.
 - Aplicamos os YAMLs → o Control Plane interpreta e entende o que precisa ser criado.
 - O Scheduler decide em qual nó os pods vão rodar (no Minikube, há apenas um nó).
-- O Kubelet cria os pods usando suas imagens Docker (apache-poc:1.0 e nginx-poc:1.0).
+- O Kubelet cria os pods usando suas imagens Docker (apache-poc:latest e nginx-poc:latest).
 - O Service expõe esses pods para fora do cluster, permitindo acesso via navegador.
 
 ----------------------------------------------------
